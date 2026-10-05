@@ -78,3 +78,9 @@ print(tokenizer.encode(text))
 # %%
 vocab["Hello"]
 # %%
+all_tokens = sorted(list(set(preprocessed)))
+all_tokens.extend(["<|endoftext|>", "<|unk|>"])
+vocab = {token:integer for integer,token in enumerate(all_tokens)}
+print(len(vocab.items()))
+
+# %%
