@@ -229,3 +229,8 @@ input_embeddings = token_embeddings + pos_embeddings
 print(input_embeddings.shape)
 
 # %%
+pos_embeddings.shape 
+
+# %%
+
+# %%
