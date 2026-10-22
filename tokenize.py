@@ -289,3 +289,5 @@ print(attn_weights)
 all_context_vecs = attn_weights @ inputs
 print(all_context_vecs)
 # %%
+print("Previous 2nd context vector:", context_vec_2)
+# %%
