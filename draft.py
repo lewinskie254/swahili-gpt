@@ -374,3 +374,10 @@ class SelfAttention_v2(nn.Module):
         attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
         context_vec = attn_weights @ values
         return context_vec
+
+#%%
+torch.manual_seed(789)
+sa_v2 = SelfAttention_v2(d_in, d_out)
+print(sa_v2(inputs))
+
+# %%
