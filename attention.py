@@ -30,8 +30,9 @@ class SelfAttention_v2(nn.Module):
         queries = self.W_query(x)
         values = self.W_value(x)
         attn_scores = queries @ keys.T # omega
-        attn_weights = torch.softmax(attn_scores / keys.shape[-1]**0.5, dim=-1)
+        context_length = attn_scores.shape[0]
+        mask = torch.triu(torch.ones(context_length, context_length), diagonal=1)
+        masked = attn_scores.masked_fill(mask.bool(), -torch.inf)
+        attn_weights = torch.softmax(masked / keys.shape[-1]**0.5, dim=1)
         context_vec = attn_weights @ values
         return context_vec
-
-    
