@@ -56,3 +56,51 @@ mha = MultiHeadAttention(d_in, d_out, context_length, 0.0, num_heads=2)
 context_vecs = mha(batch)
 print(context_vecs)
 print("context_vecs.shape:", context_vecs.shape)
+# %%
+import tiktoken
+tokenizer = tiktoken.get_encoding("gpt2")
+batch = []
+txt1 = "Every effort moves you"
+txt2 = "Every day holds a"
+batch.append(torch.tensor(tokenizer.encode(txt1)))
+batch.append(torch.tensor(tokenizer.encode(txt2)))
+batch = torch.stack(batch, dim=0)
+print(batch)
+# %%
+from dummy_gpt import DummyGPTModel, GPT_CONFIG_124M
+torch.manual_seed(123)
+model = DummyGPTModel(GPT_CONFIG_124M)
+logits = model(batch)
+print("Output shape:", logits.shape)
+print(logits)
+# %%
+torch.manual_seed(123)
+batch_example = torch.randn(2, 5)
+layer = nn.Sequential(nn.Linear(5, 6), nn.ReLU())
+out = layer(batch_example)
+print(out)
+# %%
+mean = out.mean(dim=-1, keepdim=True)
+var = out.var(dim=-1, keepdim=True)
+print("Mean:\n", mean)
+print("Variance:\n", var)
+# %%
+out_norm = (out - mean) / torch.sqrt(var)
+mean = out_norm.mean(dim=-1, keepdim=True)
+var = out_norm.var(dim=-1, keepdim=True)
+print("Normalized layer outputs:\n", out_norm)
+print("Mean:\n", mean)
+print("Variance:\n", var)
+# %%
+torch.set_printoptions(sci_mode=False)
+print("Mean:\n", mean)
+print("Variance:\n", var)
+# %%
+from gpt import LayerNorm
+ln = LayerNorm(emb_dim=5)
+out_ln = ln(batch_example)
+mean = out_ln.mean(dim=-1, keepdim=True)
+var = out_ln.var(dim=-1, unbiased=False, keepdim=True)
+print("Mean:\n", mean)
+print("Variance:\n", var)
+# %%
