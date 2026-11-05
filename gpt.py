@@ -4,7 +4,7 @@ from multihead_attention import MultiHeadAttention
 
 GPT_CONFIG_124M = {
         "vocab_size": 50257, # Vocabulary size
-        "context_length": 1024, # Context length
+        "context_length": 256, # Context length
         "emb_dim": 768, # Embedding dimension
         "n_heads": 12, # Number of attention heads
         "n_layers": 12, # Number of layers
@@ -109,3 +109,13 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
         idx_next = torch.argmax(probas, dim=-1, keepdim=True)
         idx = torch.cat((idx, idx_next), dim=1)
         return idx
+
+
+def text_to_token_ids(text, tokenizer):
+    encoded = tokenizer.encode(text, allowed_special={'<|endoftext|>'})
+    encoded_tensor = torch.tensor(encoded).unsqueeze(0)
+    return encoded_tensor
+
+def token_ids_to_text(token_ids, tokenizer):
+    flat = token_ids.squeeze(0)
+    return tokenizer.decode(flat.tolist())
