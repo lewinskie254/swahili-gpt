@@ -108,7 +108,7 @@ def generate_text_simple(model, idx, max_new_tokens, context_size):
         probas = torch.softmax(logits, dim=-1)
         idx_next = torch.argmax(probas, dim=-1, keepdim=True)
         idx = torch.cat((idx, idx_next), dim=1)
-        return idx
+    return idx
 
 
 def text_to_token_ids(text, tokenizer):
