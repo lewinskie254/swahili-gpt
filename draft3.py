@@ -124,3 +124,13 @@ torch.log(p1)
 # %%
 torch.log(torch.tensor(0.8))
 # %%
+torch.log(torch.tensor(0))
+# %%
+torch.log(torch.tensor(0.1))
+# %%
+torch.log(torch.tensor(0.0001))
+# %%
+p1
+# %%
+torch.log(torch.tensor(0.9))
+# %%
