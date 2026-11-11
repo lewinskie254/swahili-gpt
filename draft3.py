@@ -74,6 +74,7 @@ sequences = torch.tensor([
 inputs = sequences[:, :-1]
 targets = sequences[:, 1:]
 
+#%%
 print(inputs.shape)   # (2, 4)
 print(targets.shape)  # (2, 4)
 
@@ -133,4 +134,93 @@ torch.log(torch.tensor(0.0001))
 p1
 # %%
 torch.log(torch.tensor(0.9))
+# %%
+print("Logits shape:", logits.shape)
+print("Targets shape:", targets.shape)
+# %%
+logits_flat = logits.flatten(0, 1)
+targets_flat = targets.flatten()
+print("Flattened logits:", logits_flat.shape)
+print("Flattened targets:", targets_flat.shape)
+# %%
+loss = torch.nn.functional.cross_entropy(logits_flat, targets_flat)
+print(loss)
+# %%
+logits_flat[:, [targets_flat]]
+# %%
+target_logits = logits_flat[
+    torch.arange(targets_flat.shape[0]),
+    targets_flat
+]
+# %%
+target_logits
+# %%
+torch.sum(target_logits)
+# %%
+targets_flat
+soft = torch.softmax(logits_flat, dim=-1)
+
+# %%
+populated = []
+probabilities = []
+for i, element in enumerate(targets_flat): 
+    item = logits_flat[i, element]
+    pro = soft[i, element]
+    populated.append(item)
+    probabilities.append(pro)
+    print(i, element, item)
+# %%
+torch.log(torch.tensor(sum(populated)))
+# %%
+loss = torch.nn.functional.cross_entropy(logits_flat, targets_flat)
+print(loss)
+# %%
+import numpy as np 
+populated_logs = [np.log(element) for element in populated]
+sum(populated_logs)/len(populated)
+# %%
+populated_logs
+# %%
+populated
+# %%
+populated_soft = torch.softmax(torch.tensor(populated), dim=-1)
+# %%
+torch.softmax(torch.tensor([0.1, 0.8, 0.24, 0.9]), dim=-1)
+# %%
+torch.sum(populated_soft)
+# %%
+probs = torch.softmax(logits_flat, dim=-1)
+# %%
+x= probs[[
+    torch.arange(targets_flat.shape[0]),
+    targets_flat
+]]
+# %%
+torch.sum(x)
+# %%
+y = logits_flat[[
+    torch.arange(targets_flat.shape[0]),
+    targets_flat
+]]
+# %%
+y
+# %%
+sum(y)/targets_flat.shape[0]
+# %%
+torch.sum(torch.tensor(probabilities))
+# %%
+# Calculate log probabilities across the vocabulary
+log_probs = torch.log_softmax(logits_flat, dim=-1)
+
+# Select the correct target log-probability
+target_log_probs = log_probs[
+    torch.arange(targets_flat.shape[0]),
+    targets_flat
+]
+
+# Negative mean log-likelihood
+manual_loss = -target_log_probs.mean()
+
+print("Manual loss:", manual_loss)
+print("PyTorch loss:", loss)
 # %%
